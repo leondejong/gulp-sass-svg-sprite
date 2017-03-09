@@ -1,0 +1,6 @@
+@import 'map';
+@import 'sprite';
+
+.example {
+    @include sprite(example);
+}

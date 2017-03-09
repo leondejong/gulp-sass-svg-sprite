@@ -1,0 +1,98 @@
+$context: 16px !default;
+$legacy: '.legacy' !default;
+$sprite: map-get($map, sprite) !default;
+
+@function px2rem($value, $context: $context) {
+    @if unitless($value) {
+        $value: $value * 1px;
+    }
+
+    @if unitless($context) {
+        $context: $context * 1px;
+    }
+
+    @if unit($value) == 'px' {
+        @return $value / $context * 1rem;
+    }
+
+    @return $value;
+}
+
+%sprite {
+    display: inline-block;
+    background-image: url(map-get($sprite, svg-path));
+    background-size: px2rem(map-get($sprite, width)) px2rem(map-get($sprite, height));
+}
+
+%legacy {
+    background-image: url(map-get($sprite, png-path));
+}
+
+@function sprite-attribute($graphic, $attribute) {
+    $newgraphic: map-get($map, $graphic);
+
+    @if $newgraphic == null {
+        @warn "#{$graphic} not found";
+    }
+
+    @return map-get($newgraphic, $attribute);
+}
+
+@function graphic-attribute($graphic) {
+    $attribute: (
+        x: sprite-attribute($graphic, x),
+        y: sprite-attribute($graphic, y),
+        width: sprite-attribute($graphic, width),
+        height: sprite-attribute($graphic, height)
+    );
+
+	@return $attribute;
+}
+
+@function graphic-width($graphic) {
+    @return px2rem(sprite-attribute($graphic, width));
+}
+
+@function graphic-height($graphic) {
+    @return px2rem(sprite-attribute($graphic, height));
+}
+
+@mixin legacy($graphic, $type: all) {
+    $map: graphic-attribute($graphic);
+
+    @if $legacy {
+        #{$legacy} & {
+            @if $type == all {
+                @extend %legacy;
+            }
+
+            @if $type == all or $type == size {
+                width: map-get($map, width);
+                height: map-get($map, height);
+            }
+
+            @if $type == all or $type == bg {
+                background-position: (map-get($map, x) - 5) (map-get($map, y) - 5);
+            }
+        }
+    }
+}
+
+@mixin sprite($graphic, $type: all) {
+    @if $type == all {
+        @extend %sprite;
+    }
+
+    $map: graphic-attribute($graphic);
+
+    @if $type == all or $type == size {
+        width: px2rem(map-get($map, width) + 1);
+        height: px2rem(map-get($map, height) + 1);
+    }
+
+    @if $type == all or $type == bg {
+        background-position: px2rem(map-get($map, x) - 5) px2rem(map-get($map, y) - 5);
+    }
+
+    @include legacy($graphic, $type);
+}

@@ -1,0 +1,16 @@
+$map: (
+	sprite: (
+		png-path: '../sprite/sprite.png',
+		svg-path: '../sprite/sprite.svg',
+		width: {{spriteWidth}}px,
+		height: {{spriteHeight}}px
+	),
+	{{#shapes}}
+	{{base}}: (
+			x: {{position.absolute.x}}px,
+			y: {{position.absolute.y}}px,
+			width: {{width.inner}}px,
+			height: {{height.inner}}px
+	),
+	{{/shapes}}
+);
