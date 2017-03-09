@@ -1,5 +1,5 @@
 @import 'map';
-@import 'sprite';
+@import '../../src/sass/sprite';
 
 .example {
     @include sprite(example);

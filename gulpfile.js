@@ -8,19 +8,21 @@ var size = require('gulp-size');
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 
-var base = 'src/';
+var src = 'src/';
+var dst = 'dst/';
 
 var uri = {
 	src: {
-		template: base + 'sass/_template.scss',
-		svg: base + 'svg/*.svg',
-		sass: base + 'sass/**/*.scss'
+		template: src + 'sass/_template.scss',
+		svg: src + 'svg/*.svg',
+		sass: src + 'sass/**/*.scss'
 	},
 	dst: {
 		svg: 'sprite/sprite.svg',
-		png: base + 'sprite/',
+		png: dst + 'sprite/',
 		map: 'sass/_map.scss',
-		css: base + 'css/'
+		css: dst + 'css/',
+		sass: dst + 'sass/**/*.scss'
 	}
 }
 
@@ -50,11 +52,11 @@ gulp.task('svg-sprite', function () {
                 mapname: 'icons'
             }
         }))
-        .pipe(gulp.dest(base));
+        .pipe(gulp.dest(dst));
 });
 
 gulp.task('png-sprite', ['svg-sprite'], function() {
-    return gulp.src(base + uri.dst.svg)
+    return gulp.src(dst + uri.dst.svg)
         .pipe(svg2png())
         .pipe(size({
             showFiles: true
@@ -63,7 +65,7 @@ gulp.task('png-sprite', ['svg-sprite'], function() {
 });
 
 gulp.task('sass', ['sprite'], function () {
-  return gulp.src(uri.src.sass)
+  return gulp.src([uri.src.sass, uri.dst.sass])
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest(uri.dst.css));
 });

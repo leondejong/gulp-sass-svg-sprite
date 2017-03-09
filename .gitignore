@@ -1,5 +1,5 @@
 node_modules/
-src/css/
-src/sprite/
-src/sass/_map.scss
+dst/css/
+dst/sprite/
+dst/sass/_map.scss
 npm-debug.log
